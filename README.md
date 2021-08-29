@@ -1,2 +1,2 @@
 # him_log
-Arduino Logging Library
+Arduino Debug Log Routines
