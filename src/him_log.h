@@ -156,12 +156,15 @@
     #  define him_logd(format, ...)
     #  define him_logb(format, ...)
     #else 
-    #  define him_log_init(baudrate)  Serial.begin(baudrate)
-    #  define him_logd(format, ...)   HimLog.log(false, F(format), ##__VA_ARGS__)
-    #  define him_logd_pos(x,y)       HimLog.log(false, "\033[%d;%df", x, y)
+    #  ifndef him_serial_init
+    #    define him_serial_init(baudrate)   Serial.begin(baudrate)
+    #  endif 
+    #  define him_log_init(baudrate)        Serial.begin(baudrate)
+    #  define him_logd(format, ...)         HimLog.log(false, F(format), ##__VA_ARGS__)
+    #  define him_logd_pos(x,y)             HimLog.log(false, "\033[%d;%df", x, y)
     #  ifdef HIM_LOG_BUFFER_ENABLE
-    #    define him_logb(format, ...)   HimLog.log(true, F(format), ##__VA_ARGS__)
-    #    define him_logb_pos(x,y)       HimLog.log(true, "\033[%d;%df", x, y)
+    #    define him_logb(format, ...)       HimLog.log(true, F(format), ##__VA_ARGS__)
+    #    define him_logb_pos(x,y)           HimLog.log(true, "\033[%d;%df", x, y)
     #  else 
     #    define him_logb(format, ...)
     #    define him_logb_pos(x,y)
