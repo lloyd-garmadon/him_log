@@ -33,7 +33,7 @@
 
 #define HIM_LOG_ENABLE
 #define HIM_LOG_DEBUG_ENABLE
-#define HIM_LOG_TRACE_ENABLE
+#define HIM_LOG_INFO_ENABLE
 #define HIM_LOG_WARN_ENABLE
 #define HIM_LOG_ERROR_ENABLE
 
@@ -176,32 +176,32 @@
     #  define him_logd_debug(format, ...)
     #  define him_logb_debug(format, ...)
     #else 
-    #  define him_logd_debug(format, ...) him_logd(format, ##__VA_ARGS__)
-    #  define him_logb_debug(format, ...) him_logb(format, ##__VA_ARGS__)
+    #  define him_logd_debug(format, ...) him_logd("dbg:"); him_logd(format, ##__VA_ARGS__)
+    #  define him_logb_debug(format, ...) him_logb("dbg:"); him_logb(format, ##__VA_ARGS__)
     #endif
 
-    #ifndef HIM_LOG_TRACE_ENABLE
-    #  define him_logd_trace(format,...)
-    #  define him_logb_trace(format,...)
+    #ifndef HIM_LOG_INFO_ENABLE
+    #  define him_logd_info(format,...)
+    #  define him_logb_info(format,...)
     #else
-    #  define him_logd_trace(format,...) him_logd(format, ##__VA_ARGS__)
-    #  define him_logb_trace(format,...) him_logb(format, ##__VA_ARGS__)
+    #  define him_logd_info(format,...) him_logd("info:");him_logd(format, ##__VA_ARGS__)
+    #  define him_logb_info(format,...) him_logb("info:");him_logb(format, ##__VA_ARGS__)
     #endif
 
     #ifndef HIM_LOG_WARN_ENABLE
     #  define him_logd_warn(format,...)
     #  define him_logb_warn(format,...)
     #else
-    #  define him_logd_warn(format,...) him_logd(format, ##__VA_ARGS__)
-    #  define him_logb_warn(format,...) him_logb(format, ##__VA_ARGS__)
+    #  define him_logd_warn(format,...) him_logd("warn:");him_logd(format, ##__VA_ARGS__)
+    #  define him_logb_warn(format,...) him_logb("warn:");him_logb(format, ##__VA_ARGS__)
     #endif
 
     #ifndef HIM_LOG_ERROR_ENABLE
     #  define him_logd_error(format,...)
     #  define him_logb_error(format,...)
     #else
-    #  define him_logd_error(format,...) him_logd(format, ##__VA_ARGS__)
-    #  define him_logb_error(format,...) him_logb(format, ##__VA_ARGS__)
+    #  define him_logd_error(format,...) him_logd("err:");him_logd(format, ##__VA_ARGS__)
+    #  define him_logb_error(format,...) him_logb("err:");him_logb(format, ##__VA_ARGS__)
     #endif
 
     #ifdef HIM_LOG_BUFFER_ENABLE
@@ -226,8 +226,8 @@
     #define him_logb(format, ...)
     #define him_logd_debug(format, ...)
     #define him_logb_debug(format, ...)
-    #define him_logd_trace(format, ...)
-    #define him_logb_trace(format, ...)
+    #define him_logd_info(format, ...)
+    #define him_logb_info(format, ...)
     #define him_logd_warn(format, ...)
     #define him_logb_warn(format, ...)
     #define him_logd_error(format, ...)
