@@ -456,7 +456,7 @@ void HimLogging::flush(bool flush_now)
 
     if(m_log_buffer_overflow) {
         flush = true;
-        Serial.println("** OF **");
+        Serial.print("**OF**");
     }
 
     flush = flush && count;

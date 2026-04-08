@@ -30,16 +30,9 @@
 #define _HIM_LOG_H_
 
 
+#include "Arduino.h"
 
-#define HIM_LOG_ENABLE
-#define HIM_LOG_DEBUG_ENABLE
-#define HIM_LOG_INFO_ENABLE
-#define HIM_LOG_WARN_ENABLE
-#define HIM_LOG_ERROR_ENABLE
-
-#define HIM_LOG_BUFFER_ENABLE 
-#define HIM_LOG_BUFFER_SIZE        128
-
+#include "him_log_config.h"
 
 
 #define HIM_LOG_CURSOR_HOME           "\033[H"               // Sets the cursor position where subsequent text will begin. If no row/column parameters are provided (ie. <ESC>[H), the cursor will move to the home position, at the upper left of the screen.
@@ -83,10 +76,6 @@
 #define HIM_LOG_ATTR_BACKGND_MA       "\033[45m"        // Background Magenta
 #define HIM_LOG_ATTR_BACKGND_CY       "\033[46m"        // Background Cyan
 #define HIM_LOG_ATTR_BACKGND_WT       "\033[47m"        // Background White
-
-
-
-#include "Arduino.h"
 
 
 
@@ -151,57 +140,70 @@
     extern HimLogging HimLog;
 
     // log macros
-    #ifndef HIM_LOG_ENABLE
-    #  define him_log_init(baudrate)
-    #  define him_logd(format, ...)
-    #  define him_logb(format, ...)
+    #ifndef him_serial_init
+    #  define him_serial_init(baudrate)   Serial.begin(baudrate)
+    #endif 
+    #define him_log_init(baudrate)        Serial.begin(baudrate)
+    #define him_logd(format, ...)         HimLog.log(false, F(format), ##__VA_ARGS__)
+    #define him_logvd(format, ...)        HimLog.log(false, format, ##__VA_ARGS__)
+    #define him_logd_pos(x,y)             HimLog.log(false, "\033[%d;%df", x, y)
+    #ifdef HIM_LOG_BUFFER_ENABLE
+    #  define him_logb(format, ...)       HimLog.log(true, F(format), ##__VA_ARGS__)
+    #  define him_logvb(format, ...)      HimLog.log(true, format, ##__VA_ARGS__)
+    #  define him_logb_pos(x,y)           HimLog.log(true, "\033[%d;%df", x, y)
     #else 
-    #  ifndef him_serial_init
-    #    define him_serial_init(baudrate)   Serial.begin(baudrate)
-    #  endif 
-    #  define him_log_init(baudrate)        Serial.begin(baudrate)
-    #  define him_logd(format, ...)         HimLog.log(false, F(format), ##__VA_ARGS__)
-    #  define him_logd_pos(x,y)             HimLog.log(false, "\033[%d;%df", x, y)
-    #  ifdef HIM_LOG_BUFFER_ENABLE
-    #    define him_logb(format, ...)       HimLog.log(true, F(format), ##__VA_ARGS__)
-    #    define him_logb_pos(x,y)           HimLog.log(true, "\033[%d;%df", x, y)
-    #  else 
-    #    define him_logb(format, ...)
-    #    define him_logb_pos(x,y)
-    #  endif
+    #  define him_logb(format, ...)
+    #  define him_logvb(format, ...)
+    #  define him_logb_pos(x,y)
     #endif
 
 
     #ifndef HIM_LOG_DEBUG_ENABLE
     #  define him_logd_debug(format, ...)
     #  define him_logb_debug(format, ...)
+    #  define him_logvd_debug(format, ...)
+    #  define him_logvb_debug(format, ...)
     #else 
-    #  define him_logd_debug(format, ...) him_logd("dbg:"); him_logd(format, ##__VA_ARGS__)
-    #  define him_logb_debug(format, ...) him_logb("dbg:"); him_logb(format, ##__VA_ARGS__)
+    #  define him_logd_debug(format, ...)   him_logd("DBG:"); him_logd(format, ##__VA_ARGS__)
+    #  define him_logb_debug(format, ...)   him_logb("DBG:"); him_logb(format, ##__VA_ARGS__)
+    #  define him_logvd_debug(format, ...)  him_logd("DBG:"); him_logvd(format, ##__VA_ARGS__)
+    #  define him_logvb_debug(format, ...)  him_logb("DBG:"); him_logvb(format, ##__VA_ARGS__)
     #endif
 
     #ifndef HIM_LOG_INFO_ENABLE
     #  define him_logd_info(format,...)
     #  define him_logb_info(format,...)
+    #  define him_logvd_info(format,...)
+    #  define him_logvb_info(format,...)
     #else
-    #  define him_logd_info(format,...) him_logd("info:");him_logd(format, ##__VA_ARGS__)
-    #  define him_logb_info(format,...) him_logb("info:");him_logb(format, ##__VA_ARGS__)
+    #  define him_logd_info(format,...)   him_logd("INFO:");him_logd(format, ##__VA_ARGS__)
+    #  define him_logb_info(format,...)   him_logb("INFO:");him_logb(format, ##__VA_ARGS__)
+    #  define him_logvd_info(format,...)  him_logd("INFO:");him_logvd(format, ##__VA_ARGS__)
+    #  define him_logvb_info(format,...)  him_logb("INFO:");him_logvb(format, ##__VA_ARGS__)
     #endif
 
     #ifndef HIM_LOG_WARN_ENABLE
     #  define him_logd_warn(format,...)
     #  define him_logb_warn(format,...)
+    #  define him_logvd_warn(format,...)
+    #  define him_logvb_warn(format,...)
     #else
-    #  define him_logd_warn(format,...) him_logd("warn:");him_logd(format, ##__VA_ARGS__)
-    #  define him_logb_warn(format,...) him_logb("warn:");him_logb(format, ##__VA_ARGS__)
+    #  define him_logd_warn(format,...)   him_logd("WARN:");him_logd(format, ##__VA_ARGS__)
+    #  define him_logb_warn(format,...)   him_logb("WARN:");him_logb(format, ##__VA_ARGS__)
+    #  define him_logvd_warn(format,...)  him_logd("WARN:");him_logvd(format, ##__VA_ARGS__)
+    #  define him_logvb_warn(format,...)  him_logb("WARN:");him_logvb(format, ##__VA_ARGS__)
     #endif
 
     #ifndef HIM_LOG_ERROR_ENABLE
     #  define him_logd_error(format,...)
     #  define him_logb_error(format,...)
+    #  define him_logvd_error(format,...)
+    #  define him_logvb_error(format,...)
     #else
-    #  define him_logd_error(format,...) him_logd("err:");him_logd(format, ##__VA_ARGS__)
-    #  define him_logb_error(format,...) him_logb("err:");him_logb(format, ##__VA_ARGS__)
+    #  define him_logd_error(format,...)   him_logd("ERR:");him_logd(format, ##__VA_ARGS__)
+    #  define him_logb_error(format,...)   him_logb("ERR:");him_logb(format, ##__VA_ARGS__)
+    #  define him_logvd_error(format,...)  him_logd("ERR:");him_logvd(format, ##__VA_ARGS__)
+    #  define him_logvb_error(format,...)  him_logb("ERR:");him_logvb(format, ##__VA_ARGS__)
     #endif
 
     #ifdef HIM_LOG_BUFFER_ENABLE
